@@ -1,0 +1,147 @@
+MSTEST setup
+
+Instructions for project setup
+to include properly encapsulated tests.
+
+/**********************************************************************/
+First create a solution directory called Calendar.Solution.
+
+ in the Calendar.Solution directory,create two additional directories:
+ - Calendar
+ - Calendar.Tests.
+
+run Git commands, and save your README.md file at the solution level
+
+/**********************************************************************/
+in Calendar create file
+-Calendar.csproj
+
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- This code tells .NET that we are using the .NET Core 1.1. -->
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+
+</Project>
+
+/**********************************************************************/
+
+- .csproj Files  //This file tells .NET which packages your project needs.
+                 //These packages refer to existing blocks of code,
+                 //which our program will reference as it runs.
+
+Because Calendar.Tests is its own project, it needs it's own .csproj file
+
+ /**********************************************************************/
+
+create inside the Calendar.Tests folder
+-Calendar.Tests.csproj
+
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+
+    <!-- This sets up our testing environment so we can build test projects -->
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
+
+    <!-- This runs out tests for us -->
+    <PackageReference Include="MSTest.TestAdapter" Version="1.2" />
+
+    <!-- This allows us to create test classes and methods
+    Also allow us to use other built-in-code to construct our tests. -->
+    <PackageReference Include="MSTest.TestFramework" Version="1.2" />
+
+  </ItemGroup>
+
+
+    <!-- Within this , our test project references our main application
+    project.
+    Allows the tests to find and use the namespaces of the other project
+    without interfering with it -->
+  <ItemGroup>
+    <ProjectReference Include="..\Calendar\Calendar.csproj" />
+  </ItemGroup>
+
+</Project>
+
+ /**********************************************************************/
+Navigate into the Calendar.Tests folder and run:
+
+> dotnet restore
+
+or just run this from the Calendar.Solution level
+> dotnet restore Calendar.Tests
+ /**********************************************************************/
+
+Now...  set up our LeapYear class within the Calendar namespace
+
+Calendar/Models/LeapYear.cs
+
+namespace Calendar
+{
+  public class LeapYear
+  {
+    public bool IsLeapYear(int year)
+    {
+      // logic will go here
+      return false;
+    }
+  }
+}
+
+/**********************************************************************/
+Set up our test file.
+Calendar.Tests/ModelTests/LeapYearTest.cs
+
+
+//imports the MSTest framework for us to use
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+//imports the Calendar namespace from the Calendar project for use in our tests
+using Calendar;
+
+
+namespace Calendar.Tests
+{
+
+  [TestClass] //This tells MSTest that the following class contains tests to be run
+  public class LeapYearTest
+  {
+    //This tells the compiler that the following code block is an individual
+    //test that should be run by MSTest
+    [TestMethod]
+
+    //This is the test.
+    //naming convention is basically
+    //MethodToBeTested_BehaviorToBeTested_ExpectedResultOfTest
+    public void IsLeapYear_NumberDivisibleByFour_True()
+    {
+      // eventually your testing code will go here
+    }
+  }
+}
+
+/**********************************************************************/
+let’s run the following within the 'Calendar.Tests' project
+to make sure we don’t have any compiler errors
+
+> dotnet test
+
+/**********************************************************************/
+
+Project Structure
+For reference, the structure of your project should look like this:
+
+├───Calendar.Solution
+   ├───Calendar
+       ├───Models
+           ├───LeapYear.cs
+       ├───Calendar.csproj
+    ├───Calendar.Tests
+       ├───ModelTests
+           ├───LeapYearTests.cs
+       ├───Calendar.Tests.csproj
